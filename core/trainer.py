@@ -2,15 +2,18 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-epochs = 150
+from .args import get_args
+from .model import Stock
+from .dataloader import StockLoader
 
 class Trainer():
-    def __init__(self):
-        pass
-    
+    def __init__(self, args):
+        self.args = args
+
+        self.dataloader = StockLoader(args)
+        self.model = Stock(args)
     def train(self):
-        for i in range(epochs):
+        for i in range(self.args.epoch):
             for seq, labels in train_inout_seq:
                 optimizer.zero_grad()
                 model.hidden_cell = (torch.zeros(1, 1, model.hidden_layer_size),
