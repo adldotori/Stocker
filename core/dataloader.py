@@ -26,11 +26,14 @@ class StockDataset(Dataset):
     def __getitem__(self, i):        
         return torch.randn(4),\
                torch.randn(12, 2),\
-               torch.randn(12, 25, 2)
+               torch.randn(12, 25, 2),\
+               torch.randn(1)
 
 class StockLoader(object):
-    def __init__(self, args, dataset):
+    def __init__(self, args):
         super().__init__()
+
+        dataset = StockDataset(args)
         self.data_loader = torch.utils.data.DataLoader(
             dataset, batch_size=args.batch_size, shuffle=True)
 
@@ -44,6 +47,7 @@ class StockLoader(object):
             batch = self.data_iter.__next__()
 
         return batch
+
 
 if __name__ == '__main__':
     from args import get_args 

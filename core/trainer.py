@@ -10,22 +10,18 @@ class Trainer():
     def __init__(self, args):
         self.args = args
 
-        self.dataloader = StockLoader(args)
+        self.loader = StockLoader(args)
         self.model = Stock(args)
+        self.loss = nn.MSELoss()
+        self.optim = torch.optim.Adam(self.model.parameters())
+
     def train(self):
-        for i in range(self.args.epoch):
-            for seq, labels in train_inout_seq:
-                optimizer.zero_grad()
-                model.hidden_cell = (torch.zeros(1, 1, model.hidden_layer_size),
-                                torch.zeros(1, 1, model.hidden_layer_size))
+        for epoch in range(self.args.epoch):
+            for i in range(len(self.loader.data_loader)):
+                group_info, month_info, day_info, label = self.loader.next_batch()
+                
+                pred = self.model(group_info, month_info, day_info)
 
-                y_pred = model(seq)
-
-                single_loss = loss_function(y_pred, labels)
-                single_loss.backward()
-                optimizer.step()
-
-            if i%25 == 1:
-                print(f'epoch: {i:3} loss: {single_loss.item():10.8f}')
-
-        print(f'epoch: {i:3} loss: {single_loss.item():10.10f}')
+                loss = self.loss(pred, label)
+                loss.backward()
+                self.optim.step()
