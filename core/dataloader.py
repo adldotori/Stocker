@@ -26,6 +26,7 @@ class StockDataset(Dataset):
             # print(stocks['기준일자'])
             share = pd.unique(stocks['종목번호'])
             group = pd.unique(trade['그룹번호'])
+            print(share, group)
             
             df = trade.copy()
             df.columns = ['blank', 'month', 'group_id', 'client_num', 
@@ -180,8 +181,13 @@ class StockLoader(object):
         super().__init__()
 
         dataset = StockDataset(args)
-        self.data_loader = torch.utils.data.DataLoader(
-            dataset, batch_size=args.batch_size, shuffle=True)
+
+        if args.mode == 'train':
+            self.data_loader = torch.utils.data.DataLoader(
+                dataset, batch_size=args.batch_size, shuffle=True)
+        else:
+            self.data_loader = torch.utils.data.DataLoader(
+                dataset, batch_size=args.batch_size)
 
         self.data_iter = self.data_loader.__iter__()
 
