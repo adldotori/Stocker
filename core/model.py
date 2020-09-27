@@ -32,7 +32,7 @@ class Stock(nn.Module):
         group_info = self.group(group_info).unsqueeze(0)
 
         person = self.person_cnt(month_info, group_info)[0]
-        person = self.final(person).squeeze(-1)
+        person = self.final(person).permute(1,0,2)
         return person
 
 
@@ -41,9 +41,9 @@ if __name__ == '__main__':
     args = get_args()
 
     group_info = torch.randn(args.batch_size, 4).to(args.device)
-    month_info = torch.randn(args.batch_size, 12, 2).to(args.device)
-    day_info = torch.randn(args.batch_size, 12, 25, 2).to(args.device)
+    month_info = torch.randn(args.batch_size, 11, 2).to(args.device)
+    day_info = torch.randn(args.batch_size, 11, 24, 2).to(args.device)
     model = Stock(args).to(args.device)
-
+    
     res = model(group_info, month_info, day_info)
     print(res.shape)

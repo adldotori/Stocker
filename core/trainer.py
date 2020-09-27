@@ -25,3 +25,6 @@ class Trainer():
                 loss = self.loss(pred, label)
                 loss.backward()
                 self.optim.step()
+            print(f'{epoch}:{loss}')
+            
+            torch.save(self.model.state_dict(), 'checkpoint.pt')
